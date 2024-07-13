@@ -37,16 +37,30 @@ def download_arxiv_papers(search_query: str, start: int = 0, max_results: int = 
         """Fetch the BibTeX citation for a given arXiv ID using Selenium."""
         citation_url = f"https://arxiv.org/abs/{arxiv_id}"
         
-        # Set up Chrome options for headless mode
+        # Set up Chrome options for non-headless mode
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--headless")
+        # Comment out headless option for manual intervention
+        # chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920x1080")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--proxy-server='direct://'")
+        chrome_options.add_argument("--proxy-bypass-list=*")
+        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-infobars")
+        chrome_options.add_argument("--disable-notifications")
+        chrome_options.add_argument("--disable-popup-blocking")
+        
         driver = webdriver.Chrome(options=chrome_options)
         driver.get(citation_url)
 
         try:
+            # Pause here for manual captcha solving
+            input("Please solve the captcha and then press Enter to continue...")
+
             export_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.ID, "bib-cite-trigger"))
             )
@@ -101,3 +115,6 @@ def download_arxiv_papers(search_query: str, start: int = 0, max_results: int = 
 
             metadata = [title, link, summary_filename, pdf_filename, citation_filename]
             save_metadata_to_csv(metadata, csv_file)
+
+if __name__ == "__main__":
+    download_arxiv_papers("all:Interpretability in Machine Learning")
