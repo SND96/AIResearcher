@@ -37,10 +37,9 @@ def download_arxiv_papers(search_query: str, start: int = 0, max_results: int = 
         """Fetch the BibTeX citation for a given arXiv ID using Selenium."""
         citation_url = f"https://arxiv.org/abs/{arxiv_id}"
         
-        # Set up Chrome options for non-headless mode
+        # Set up Chrome options for headless mode
         chrome_options = webdriver.ChromeOptions()
-        # Comment out headless option for manual intervention
-        # chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-gpu")
@@ -58,9 +57,6 @@ def download_arxiv_papers(search_query: str, start: int = 0, max_results: int = 
         driver.get(citation_url)
 
         try:
-            # Pause here for manual captcha solving
-            input("Please solve the captcha and then press Enter to continue...")
-
             export_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.ID, "bib-cite-trigger"))
             )
@@ -70,6 +66,9 @@ def download_arxiv_papers(search_query: str, start: int = 0, max_results: int = 
                 EC.visibility_of_element_located((By.ID, "bib-cite-target"))
             )
             citation = citation_textarea.get_attribute("value")
+        except Exception as e:
+            print(f"Error fetching citation for {arxiv_id}: {e}")
+            citation = ""
         finally:
             driver.quit()
 
