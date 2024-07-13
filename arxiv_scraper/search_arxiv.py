@@ -1,6 +1,6 @@
 import sys
-from query_generator import generate_arxiv_queries
-from arxiv_downloader import download_arxiv_papers
+from arxiv_scraper.query_generator import generate_arxiv_queries
+from arxiv_scraper.arxiv_downloader import download_arxiv_papers
 
 def main():
     if len(sys.argv) != 2:
