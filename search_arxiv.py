@@ -1,4 +1,5 @@
 import sys
+import concurrent.futures
 from query_generator import generate_arxiv_queries
 from arxiv_downloader import download_arxiv_papers
 
@@ -9,13 +10,18 @@ def main():
     search_query = sys.argv[1]
     download_papers_for_query(search_query)
 
-
 def download_papers_for_query(initial_query: str):
     api_key = "d54dae610f891c57039c871fc9fa4fdb247116726e06f5d8308e3edde2f9f946"  
     generated_queries = generate_arxiv_queries(initial_query, api_key)
-
-    for query in generated_queries:
-        download_arxiv_papers(search_query=f"all:{query}")
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(generated_queries)) as executor:
+        futures = [executor.submit(download_arxiv_papers, f"all:{query}") for query in generated_queries]
+        
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                future.result()
+            except Exception as e:
+                print(f"Error occurred: {e}")
 
 if __name__ == "__main__":
     main()

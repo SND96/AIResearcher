@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 arxiv_pdfs/
 arxiv_summaries/
+arxiv_citations/
+.csv
