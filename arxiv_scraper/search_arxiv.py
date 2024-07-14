@@ -1,17 +1,20 @@
-import sys
-from arxiv_scraper.query_generator import generate_arxiv_queries
-from arxiv_scraper.arxiv_downloader import download_arxiv_papers
+
+
+import argparse
+from query_generator import generate_arxiv_queries
+from arxiv_downloader import download_arxiv_papers
 
 def main():
-    if len(sys.argv) != 2:
-        raise ValueError("Usage: python search_arxiv.py <initial_search_query>")
+    parser = argparse.ArgumentParser(description="Search arXiv and download papers based on search queries and context.")
+    parser.add_argument("--search-query", required=True, help="The initial search query for arXiv.")
+    parser.add_argument("--context", default="", help="Additional context to refine the search queries.")
+    
+    args = parser.parse_args()
+    download_papers_for_query(args.search_query, args.context)
 
-    search_query = sys.argv[1]
-    download_papers_for_query(search_query)
-
-def download_papers_for_query(initial_query: str):
+def download_papers_for_query(initial_query: str, context: str):
     api_key = "d54dae610f891c57039c871fc9fa4fdb247116726e06f5d8308e3edde2f9f946"
-    generated_queries = generate_arxiv_queries(initial_query, api_key)
+    generated_queries = generate_arxiv_queries(initial_query, api_key, context)
 
     for query in generated_queries:
         try:
@@ -21,3 +24,4 @@ def download_papers_for_query(initial_query: str):
 
 if __name__ == "__main__":
     main()
+
