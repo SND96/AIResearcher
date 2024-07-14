@@ -32,6 +32,7 @@ def get_subtopics(df_topics, chatbot, max_llm_retries=3,
         df_subtopics = pd.DataFrame(response_json) # subtopic, subtopic_description
         df_subtopics['topic'] = topic
         df_subtopics['description'] = description
+        df_subtopics['citation'] = row['Citation']
         output.append(df_subtopics)
     df_subtopics = pd.concat(output)
     df_subtopics.to_csv(outfile, index=False)
@@ -39,6 +40,6 @@ def get_subtopics(df_topics, chatbot, max_llm_retries=3,
 
 API_KEY = 'd54dae610f891c57039c871fc9fa4fdb247116726e06f5d8308e3edde2f9f946'
 chatbot = Together(api_key=API_KEY)
-df_topics = pd.read_csv('topics_and_summaries.csv')
+df_topics = pd.read_csv('papers_df.csv')
 get_subtopics(df_topics, chatbot, max_llm_retries=3,
               outfile='subtopics.csv')
