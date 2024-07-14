@@ -1,0 +1,44 @@
+import pandas as pd
+from together import Together
+import sys
+sys.path.append('AIResearcher/')
+from prompts import get_subtopic_generation_prompt
+from utils import extract_valid_json
+
+def get_subtopics(df_topics, chatbot, max_llm_retries=3,
+                  outfile='subtopics.csv'):
+    output = []
+    for i,row in df_topics.iterrows():
+        topic = row['Topic']
+        description = row['Summary']
+        #context = format_context(row['Context'])
+        # TODO add context from upstream
+        prompt = get_subtopic_generation_prompt(topic, description)#,
+                                                #context)
+        response = chatbot.chat.completions.create(
+            model="meta-llama/Llama-3-8b-chat-hf",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        
+        llm_retry = 0
+        while llm_retry < max_llm_retries:
+            response_content = response.choices[0].message.content
+            response_json = extract_valid_json(response_content)
+            if response_content is not None:
+                break
+            llm_retry += 1
+        if response_content is None:
+            return None
+        df_subtopics = pd.DataFrame(response_json) # subtopic, subtopic_description
+        df_subtopics['topic'] = topic
+        df_subtopics['description'] = description
+        output.append(df_subtopics)
+    df_subtopics = pd.concat(output)
+    df_subtopics.to_csv(outfile, index=False)
+    return df_subtopics
+
+API_KEY = 'd54dae610f891c57039c871fc9fa4fdb247116726e06f5d8308e3edde2f9f946'
+chatbot = Together(api_key=API_KEY)
+df_topics = pd.read_csv('topics_and_summaries.csv')
+get_subtopics(df_topics, chatbot, max_llm_retries=3,
+              outfile='subtopics.csv')
