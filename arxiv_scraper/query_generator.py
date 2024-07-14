@@ -1,9 +1,9 @@
 import os
 from together import Together
 
-def generate_arxiv_queries(initial_query: str, api_key: str, context: str = "") -> list:
+def generate_arxiv_queries(initial_query: str, api_key: str, context: str = "", num_queries=5) -> list:
     """
-    Generate a list of 5 unique search queries for arXiv based on an initial query.
+    Generate a list of x unique search queries for arXiv based on an initial query.
     
     Args:
         initial_query (str): The initial query to base the generated queries on.
@@ -11,15 +11,15 @@ def generate_arxiv_queries(initial_query: str, api_key: str, context: str = "") 
         context (str): Additional context to be used in the prompt.
     
     Returns:
-        list: A list of 5 unique search queries.
+        list: A list of x unique search queries.
     """
     client = Together(api_key=api_key)
 
     if context:
-        prompt = (f"Generate a list of 5 unique search queries for arXiv based on the initial query '{initial_query}' "
+        prompt = (f"Generate a list of {num_queries} unique search queries for arXiv based on the initial query '{initial_query}' "
                   f"and considering the following context: {context}. Each query should be relevant and unique. Only provide the queries in a comma-separated format without any additional text.")
     else:
-        prompt = (f"Generate a list of 5 unique search queries for arXiv based on the initial query '{initial_query}'. "
+        prompt = (f"Generate a list of {num_queries} unique search queries for arXiv based on the initial query '{initial_query}'. "
                   f"Each query should be relevant and unique. Only provide the queries in a comma-separated format without any additional text.")
 
     response = client.chat.completions.create(

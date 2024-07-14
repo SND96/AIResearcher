@@ -7,7 +7,6 @@ import pandas as pd
 
 client = OpenAI()
 
-
 def download_arxiv_pdf(arxiv_id, save_path):
     url = f'https://arxiv.org/pdf/{arxiv_id}.pdf'
     response = requests.get(url)
@@ -63,17 +62,17 @@ def get_topics_df(save_path, api_key, num_topics=5):
 
 
     df = pd.DataFrame({
-        "Name": "RAG",
+        # "Name": "RAG",
         "Topic": topics_list,
         "Summary": summaries,
-        "Citation":"arxiv_something"
+        # "Citation":"arxiv_something"
     })
 
-    print(df)
-    df.to_csv("topics_and_summaries.csv", index=False)
+    # print(df)
+    # df.to_csv("topics_and_summaries.csv", index=False)
     return df
 
 if __name__ == "__main__":
     save_path = "downloaded_paper.pdf"
-    api_key = ""
+    api_key = "sk-proj-mAPSSokSt1DWvYIy7UBjT3BlbkFJ9j1IPuQQfFVJFC2eDQmN"
     get_topics_df(save_path, api_key, 5)
