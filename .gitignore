@@ -76,6 +76,8 @@ docs/_build/
 target/
 
 .DS_Store
+*.csv
+*.pdf
 
 # Jupyter Notebook
 .ipynb_checkpoints
