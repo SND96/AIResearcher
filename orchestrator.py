@@ -55,7 +55,7 @@ if __name__ == "__main__":
     # save_path = "downloaded_paper.pdf"
     folder_arxiv_pdfs = "arxiv_pdfs"
     folder_arxiv_cits = "arxiv_citations"
-    api_key = "sk-proj-mAPSSokSt1DWvYIy7UBjT3BlbkFJ9j1IPuQQfFVJFC2eDQmN"
+    api_key = ""
     # api_key = "d54dae610f891c57039c871fc9fa4fdb247116726e06f5d8308e3edde2f9f946"
 
     # Delete all files in folders
