@@ -33,7 +33,7 @@ AIResearcher/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/AIResearcher.git
+git clone https://github.com/SND96/AIResearcher.git
 cd AIResearcher
 ```
 
